@@ -24,7 +24,7 @@ DEFAULT_DB_FILE_PATH = Path.home().joinpath(
 def get_database_path(config_file: Path) -> Path:
 
     #return the curr path to the to-do database.
-    config_parser = configparser.ConfigPatser()
+    config_parser = configparser.ConfigParser()
     config_parser.read(config_file)
     return Path(config_parser["General"]["database"])
 
