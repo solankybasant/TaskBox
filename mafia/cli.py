@@ -91,6 +91,15 @@ def add(
 
 @app.command(name="show")
 def list_all()-> None:
+
+    print("""
+___________              __            __________              
+\__    ___/____    _____|  | __        \______   \ _______  ___
+  |    |  \__  \  /  ___/  |/ /  ______ |    |  _//  _ \  \/  /
+  |    |   / __ \_\___ \|    <  /_____/ |    |   (  <_> >    < 
+  |____|  (____  /____  >__|_ \         |______  /\____/__/\_ \:)
+               \/     \/     \/                \/            \/
+    """)
     todoer = get_todoer()
     todo_list=todoer.get_todo_list()
     if len(todo_list)==0:
@@ -114,7 +123,7 @@ def list_all()-> None:
                 bold=True
                 )
     typer.secho(
-        "-"*len(headers),
+        "-"*2*len(headers),
         fg=typer.colors.BLUE
     )
     for id, todo in enumerate(todo_list,1):
@@ -130,9 +139,28 @@ def list_all()-> None:
 
             fg=typer.colors.BLUE,
         )   
-    typer.secho("-"*len(headers)+"\n",
+    typer.secho("-"*2*len(headers)+"\n",
                 fg=typer.colors.BLUE
                 )
+
+
+@app.command(name="complete")
+def set_done(todo_id:int=typer.Argument(...)) ->None:
+    #complete by TODO ID
+    todoer=get_todoer()
+    todo,error=todoer.set_done(todo_id)
+    if error:
+        typer.secho(
+            f'TODO with ID "{todo_id}" failed with "ERRORS[error]" ',
+            fg=typer.colors.RED,
+        )
+        raise typer.Exit(1)
+    else:
+        typer.secho(
+            f"""Congrats, TODO with ID-> {todo_id} and description-> "{todo['Description']}", Completed!""",
+            fg=typer.colors.GREEN,
+        )
+
 
 def _version_callback(value: bool) -> None:
     if value:
