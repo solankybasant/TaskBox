@@ -104,17 +104,17 @@ ___________              __            __________
     todo_list=todoer.get_todo_list()
     if len(todo_list)==0:
         typer.secho(
-            "Run python mafia add "<Task>" to add task",
+            "Run python -m mafia add <Tasks> to add task",
             fg=typer.colors.RED
         )
         raise typer.Exit()
     typer.secho("\nTodoBox List:\n",
-                fg=typer.colors.BLUE,
+                fg=typer.colors.GREEN,
                 bold=True
                 )
     columns=(
         "ID.",
-        "| Done",
+        "|    Done    ",
         "| Description",
     )
     headers = "".join(columns)
@@ -124,7 +124,7 @@ ___________              __            __________
                 )
     typer.secho(
         "-"*2*len(headers),
-        fg=typer.colors.BLUE
+        fg=typer.colors.YELLOW
     )
     for id, todo in enumerate(todo_list,1):
         desc,done=todo.values()
@@ -137,10 +137,10 @@ ___________              __            __________
 
             f"| {desc}",
 
-            fg=typer.colors.BLUE,
+            fg=typer.colors.GREEN
         )   
     typer.secho("-"*2*len(headers)+"\n",
-                fg=typer.colors.BLUE
+                fg=typer.colors.YELLOW
                 )
 
 
@@ -151,7 +151,7 @@ def set_done(todo_id:int=typer.Argument(...)) ->None:
     todo,error=todoer.set_done(todo_id)
     if error:
         typer.secho(
-            f'TODO with ID "{todo_id}" failed with "ERRORS[error]" ',
+            f'TODO with ID "{todo_id}" failed with "{ERRORS[error]}" ',
             fg=typer.colors.RED,
         )
         raise typer.Exit(1)
@@ -160,6 +160,75 @@ def set_done(todo_id:int=typer.Argument(...)) ->None:
             f"""Congrats, TODO with ID-> {todo_id} and description-> "{todo['Description']}", Completed!""",
             fg=typer.colors.GREEN,
         )
+
+
+
+@app.command(name="rm")
+def remove(
+    todo_id: int=typer.Argument(...),
+    force:bool=typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Force delete without confirmation.",
+    ),
+)->None:
+    todoer = get_todoer()
+    def _remove():
+        todo,error=todoer.remove(todo_id)
+        if error:
+            typer.secho(
+                f'Removing to-do # {todo_id} failed with "{ERRORS[error]}"',
+                fg=typer.colors.RED,
+            )
+            raise typer.Exit(1)
+        else:
+            typer.secho(
+                f"""to-do # {todo_id}: '{todo["Description"]}' was removed""",
+                fg=typer.colors.GREEN,
+            )
+
+    if force:
+        _remove()
+    else:
+        todo_list = todoer.get_todo_list()
+        try:
+            todo = todo_list[todo_id - 1]
+        except IndexError:
+            typer.secho("Invalid TODO ID", fg=typer.colors.RED)
+            raise typer.Exit(1)
+
+        delete = typer.confirm(
+            f"Delete to-do # {todo_id}: {todo['Description']}?"
+        )
+        if delete:
+            _remove()
+        else:
+            typer.echo("Operation canceled")
+
+
+
+@app.command(name="reset")
+def remove_all(
+    force:bool =typer.Option(
+        ...,
+        prompt="Do you want to delete all TODOs ?",
+        help="Force delete without confirmation.",
+    ),
+) ->None:
+    todoer=get_todoer()
+    if force:
+        error = todoer.remove_all().error
+        if error:
+            typer.secho(
+                f'Removing TODOs failed with "{ERRORS[error]}"',
+                fg=typer.colors.RED,
+            )
+            raise typer.Exit(1)
+        else:
+            typer.secho("All TODOs were removed.", fg=typer.colors.GREEN)
+    else:
+        typer.echo("Operation canceled")
 
 
 def _version_callback(value: bool) -> None:
