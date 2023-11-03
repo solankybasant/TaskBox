@@ -54,6 +54,10 @@ python -m rm <taskNumber>
 ```python 
 python -m mafia reset
 ```
+6. To set a database location:
+```python
+python -m mafia init
+```
 To remove forcefully (without confirmation)
 ```python
 python -m mafia reset --force
