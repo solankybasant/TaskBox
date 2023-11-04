@@ -58,7 +58,7 @@ python -m mafia reset
 ```python
 python -m mafia init
 ```
-To remove forcefully (without confirmation)
+7. To remove forcefully (without confirmation)
 ```python
 python -m mafia reset --force
 ```
@@ -67,6 +67,24 @@ For a complete list of commands, use the --help flag with TaskBox:
 ```python 
 python -m mafia --help
 ```
+Add an alias to your shell profile (e.g., .bashrc or .zshrc) to access TaskBox conveniently and use a custom alias (e.g., td):
+```python
+alias td='cd ~/TaskBox/ && function td {
+  if [ "$1" = "add" ] && [ -n "$2" ]; then
+    python -m mafia add "$2"
+  elif [ "$1" = "show" ]; then
+    python -m mafia show
+  elif [ "$1" = "com" ] && [ -n "$2" ]; then
+    python -m mafia complete "$2"
+  elif [ "$1" = "rm" ] && [ -n "$2" ]; then
+    python -m mafia rm "$2"
+  else
+    python -m mafia show
+  fi
+}'
+
+```
+
 
 
 
