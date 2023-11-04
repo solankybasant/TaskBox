@@ -67,7 +67,7 @@ For a complete list of commands, use the --help flag with TaskBox:
 ```python 
 python -m mafia --help
 ```
-Add an alias to your shell profile (e.g., .bashrc or .zshrc) to access TaskBox conveniently and use a custom alias (e.g., td):
+Also, you can add an alias to your shell profile (e.g., .bashrc or .zshrc) to access TaskBox conveniently and use a custom alias (e.g., td):
 ```python
 alias td='cd ~/TaskBox/ && function td {
   if [ "$1" = "add" ] && [ -n "$2" ]; then
