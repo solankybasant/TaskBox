@@ -18,7 +18,7 @@ Developed and implemented a command-line interface application using the Typer f
 TaskBox is written in Python and relies on the typer library for creating the CLI. To install TaskBox, follow these simple steps:
 1. Clone the TaskBox repository or download the source code:
 ```bash
-https://github.com/solankybasant/TaskBox
+git clone https://github.com/solankybasant/TaskBox
 ```
 2. Navigate to the TaskBox directory:
 ```bash
